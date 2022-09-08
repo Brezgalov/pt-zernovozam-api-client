@@ -9,6 +9,10 @@ use yii\httpclient\Request;
 
 class ZernovozamApiClient extends BaseApiClient
 {
+    const AUTH_COOKIE_NAME_SS_ID = 'ss-id';
+    const AUTH_COOKIE_NAME_SS_PID = 'ss-pid';
+    const AUTH_COOKIE_NAME_SS_OPT = 'ss-opt';
+
     const API_TOKEN_HEADER_NAME = 'AuthKey';
 
     /**
