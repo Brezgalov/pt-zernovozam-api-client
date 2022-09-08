@@ -86,13 +86,13 @@
             "version": "dev-master",
             "source": {
                 "type": "git",
-                "url": "https://github.com/Brezgalov/brezgalov-yii2-base-api-client.git",
-                "reference": "04fdaa4bbee83f8a8d906b6eb7c2fa33f3e1e622"
+                "url": "https://github.com/Brezgalov/yii2-base-api-client.git",
+                "reference": "b38a86062e3b874830fb0568db30be6ac725425c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/Brezgalov/brezgalov-yii2-base-api-client/zipball/04fdaa4bbee83f8a8d906b6eb7c2fa33f3e1e622",
-                "reference": "04fdaa4bbee83f8a8d906b6eb7c2fa33f3e1e622",
+                "url": "https://api.github.com/repos/Brezgalov/yii2-base-api-client/zipball/b38a86062e3b874830fb0568db30be6ac725425c",
+                "reference": "b38a86062e3b874830fb0568db30be6ac725425c",
                 "shasum": ""
             },
             "require": {
@@ -122,10 +122,10 @@
             ],
             "description": "base component for api clients",
             "support": {
-                "issues": "https://github.com/Brezgalov/brezgalov-yii2-base-api-client/issues",
-                "source": "https://github.com/Brezgalov/brezgalov-yii2-base-api-client/tree/master"
+                "issues": "https://github.com/Brezgalov/yii2-base-api-client/issues",
+                "source": "https://github.com/Brezgalov/yii2-base-api-client/tree/master"
             },
-            "time": "2022-07-28T12:21:29+00:00"
+            "time": "2022-09-06T08:28:58+00:00"
         },
         {
             "name": "cebe/markdown",
