@@ -125,10 +125,11 @@ class ZernovozamApiClient extends BaseApiClient
 
     /**
      * @param string $phone
+     * @param bool $rememberMe
      * @return Message|Request
      * @throws InvalidConfigException
      */
-    public function authByPhoneAndSuperTokenRequest(string $phone)
+    public function authByPhoneAndSuperTokenRequest(string $phone, bool $rememberMe = false)
     {
         $phone = $this->getClearPhoneNumber($phone);
 
@@ -140,6 +141,7 @@ class ZernovozamApiClient extends BaseApiClient
                 "UserName" => "+{$phone}",
                 "Password" => "1",
                 "AccessToken" => $this->superToken,
+                "RememberMe" => $rememberMe,
             ]);
     }
 
