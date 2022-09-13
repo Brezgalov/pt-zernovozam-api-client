@@ -105,27 +105,21 @@ class ZernovozamApiClient extends BaseApiClient
     public function getAuthCookies()
     {
         return new CookieCollection([
-            self::AUTH_COOKIE_NAME_SS_ID => \Yii::createObject(
-                \Yii::createObject([
-                    'class' => Cookie::class,
-                    'name' => self::AUTH_COOKIE_NAME_SS_ID,
-                    'value' => $this->ssId,
-                ])
-            ),
-            self::AUTH_COOKIE_NAME_SS_PID => \Yii::createObject(
-                \Yii::createObject([
-                    'class' => Cookie::class,
-                    'name' => self::AUTH_COOKIE_NAME_SS_PID,
-                    'value' => $this->ssPid,
-                ])
-            ),
-            self::AUTH_COOKIE_NAME_SS_OPT => \Yii::createObject(
-                \Yii::createObject([
-                    'class' => Cookie::class,
-                    'name' => self::AUTH_COOKIE_NAME_SS_OPT,
-                    'value' => $this->ssOpt,
-                ])
-            ),
+            self::AUTH_COOKIE_NAME_SS_ID => \Yii::createObject([
+                'class' => Cookie::class,
+                'name' => self::AUTH_COOKIE_NAME_SS_ID,
+                'value' => $this->ssId,
+            ]),
+            self::AUTH_COOKIE_NAME_SS_PID => \Yii::createObject([
+                'class' => Cookie::class,
+                'name' => self::AUTH_COOKIE_NAME_SS_PID,
+                'value' => $this->ssPid,
+            ]),
+            self::AUTH_COOKIE_NAME_SS_OPT => \Yii::createObject([
+                'class' => Cookie::class,
+                'name' => self::AUTH_COOKIE_NAME_SS_OPT,
+                'value' => $this->ssOpt,
+            ]),
         ]);
     }
 
