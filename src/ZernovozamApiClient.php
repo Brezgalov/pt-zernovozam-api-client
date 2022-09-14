@@ -3,6 +3,8 @@
 namespace Brezgalov\ZernovozamApiClient;
 
 use Brezgalov\BaseApiClient\BaseApiClient;
+use Brezgalov\ZernovozamApiClient\RequestBodies\ConfirmWindowsRequestBody;
+use Brezgalov\ZernovozamApiClient\RequestBodies\GetWindowRequestBody;
 use yii\base\InvalidConfigException;
 use yii\httpclient\Message;
 use yii\httpclient\Request;
@@ -16,6 +18,13 @@ class ZernovozamApiClient extends BaseApiClient
     const AUTH_COOKIE_NAME_SS_OPT = 'ss-opt';
 
     const API_TOKEN_HEADER_NAME = 'AuthKey';
+
+    const URL_AUTH = 'auth';
+    const URL_ACTUAL_STEVEDORE = 'json/reply/ActualStevedore';
+    const URL_TRADER_REQUEST = 'json/reply/TraderV2Request';
+    const URL_GET_STEVEDORE_CULTURES = 'json/reply/GetStevedoreCultures';
+    const URL_GET_WINDOWS = 'json/reply/GetWindows';
+    const URL_CONFIRM_TIMESLOTS = 'json/reply/ConfirmTimeslots';
 
     /**
      * @var string
@@ -134,7 +143,7 @@ class ZernovozamApiClient extends BaseApiClient
         $phone = $this->getClearPhoneNumber($phone);
 
         return $this
-            ->prepareRequest('auth')
+            ->prepareRequest(self::URL_AUTH)
             ->setMethod('POST')
             ->setData([
                 "provider" => "credentials",
@@ -152,7 +161,7 @@ class ZernovozamApiClient extends BaseApiClient
     public function getTerminalsRequest()
     {
         return $this
-            ->prepareRequest('json/reply/ActualStevedore')
+            ->prepareRequest(self::URL_ACTUAL_STEVEDORE)
             ->setMethod('GET')
             ->setCookies(
                 $this->getAuthCookies()
@@ -166,7 +175,7 @@ class ZernovozamApiClient extends BaseApiClient
     public function getTradersRequest()
     {
         return $this
-            ->prepareRequest('json/reply/TraderV2Request')
+            ->prepareRequest(self::URL_TRADER_REQUEST)
             ->setMethod('POST')
             ->setCookies(
                 $this->getAuthCookies()
@@ -179,8 +188,42 @@ class ZernovozamApiClient extends BaseApiClient
      */
     public function getCulturesRequest()
     {
-        return $this->prepareRequest('json/reply/GetStevedoreCultures')
+        return $this->prepareRequest(self::URL_GET_STEVEDORE_CULTURES)
             ->setMethod('POST')
+            ->setCookies(
+                $this->getAuthCookies()
+            );
+    }
+
+    /**
+     * @param GetWindowRequestBody $requestBody
+     * @return Message|Request
+     * @throws InvalidConfigException
+     */
+    public function getWindowsRequest(GetWindowRequestBody $requestBody)
+    {
+        return $this->prepareRequest(self::URL_GET_WINDOWS)
+            ->setMethod('POST')
+            ->setData(
+                $requestBody->getBody()
+            )
+            ->setCookies(
+                $this->getAuthCookies()
+            );
+    }
+
+    /**
+     * @param ConfirmWindowsRequestBody $requestBody
+     * @return Message|Request
+     * @throws InvalidConfigException
+     */
+    public function getConfirmWindowRequest(ConfirmWindowsRequestBody $requestBody)
+    {
+        return $this->prepareRequest(self::URL_CONFIRM_TIMESLOTS)
+            ->setMethod('POST')
+            ->setData(
+                $requestBody->getBody()
+            )
             ->setCookies(
                 $this->getAuthCookies()
             );
