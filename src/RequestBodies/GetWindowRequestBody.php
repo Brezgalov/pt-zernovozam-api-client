@@ -9,32 +9,46 @@ class GetWindowRequestBody extends Component implements IRequestBody
     /**
      * @var int
      */
-    public $cultureId;
+    protected $cultureId;
 
     /**
      * @var int
      */
-    public $incomingDate;
+    protected $incomingDate;
 
     /**
      * @var int
      */
-    public $stevedore;
+    protected $stevedore;
 
     /**
      * @var int
      */
-    public $traderId;
+    protected $traderId;
 
     /**
      * @var int
      */
-    public $trucksCount;
+    protected $trucksCount;
 
     /**
-     * @var int
+     * GetWindowRequestBody constructor.
+     * @param int $time
+     * @param int $cultureId
+     * @param int $stevedoreId
+     * @param int $traderId
+     * @param int $trucksCount
      */
-    public $version;
+    public function __construct(int $time, int $cultureId, int $stevedoreId, int $traderId, int $trucksCount)
+    {
+        $this->incomingDate = $time;
+        $this->cultureId = $cultureId;
+        $this->stevedore = $stevedoreId;
+        $this->traderId = $traderId;
+        $this->trucksCount = $trucksCount;
+
+        parent::__construct([]);
+    }
 
     /**
      * @return string|null
