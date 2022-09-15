@@ -20,4 +20,19 @@ class WindowConfirmationDto extends Component
      * @var string
      */
     public $driverPhone;
+
+    /**
+     * WindowConfirmationDto constructor.
+     * @param int $id
+     * @param string $plate
+     * @param string $driverPhone
+     */
+    public function __construct(int $id, string $plate, string $driverPhone)
+    {
+        $this->id = $id;
+        $this->plate = $plate;
+        $this->driverPhone = $driverPhone;
+
+        parent::__construct([]);
+    }
 }
