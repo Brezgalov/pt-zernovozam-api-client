@@ -2,7 +2,9 @@
 
 namespace Brezgalov\ZernovozamApiClient\Dto;
 
-class WindowDto
+use yii\base\Model;
+
+class WindowDto extends Model
 {
     /**
      * @var int
@@ -23,5 +25,18 @@ class WindowDto
     {
         $this->time = $time;
         $this->timeslotId = $timeslotId;
+
+        parent::__construct([]);
+    }
+
+    /**
+     * @return array
+     */
+    public function fields()
+    {
+        return [
+            'time',
+            'timeslot_id' => 'timeslotId',
+        ];
     }
 }
