@@ -7,6 +7,7 @@ use Brezgalov\ZernovozamApiClient\RequestBodies\ConfirmWindowsRequestBody;
 use Brezgalov\ZernovozamApiClient\RequestBodies\GetWindowRequestBody;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\GetWindowsResponseAdapter;
 use yii\base\InvalidConfigException;
+use yii\httpclient\Client;
 use yii\httpclient\Exception;
 use yii\httpclient\Message;
 use yii\httpclient\Request;
@@ -255,6 +256,7 @@ class ZernovozamApiClient extends BaseApiClient
     {
         $request = $this->prepareRequest(self::URL_GET_WINDOWS)
             ->setMethod('POST')
+            ->setFormat(Client::FORMAT_JSON)
             ->setData(
                 $requestBody->getBody()
             )
@@ -277,6 +279,7 @@ class ZernovozamApiClient extends BaseApiClient
     {
         return $this->prepareRequest(self::URL_CONFIRM_TIMESLOTS)
             ->setMethod('POST')
+            ->setFormat(Client::FORMAT_JSON)
             ->setData(
                 $requestBody->getBody()
             )
