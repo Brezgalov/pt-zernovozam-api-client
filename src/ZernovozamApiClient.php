@@ -247,7 +247,7 @@ class ZernovozamApiClient extends BaseApiClient
 
     /**
      * @param GetWindowRequestBody $requestBody
-     * @return GetWindowsResponseAdapter|object
+     * @return GetWindowsResponseAdapter
      * @throws InvalidConfigException
      * @throws Exception
      */
