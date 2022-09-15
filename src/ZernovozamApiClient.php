@@ -5,7 +5,9 @@ namespace Brezgalov\ZernovozamApiClient;
 use Brezgalov\BaseApiClient\BaseApiClient;
 use Brezgalov\ZernovozamApiClient\RequestBodies\ConfirmWindowsRequestBody;
 use Brezgalov\ZernovozamApiClient\RequestBodies\GetWindowRequestBody;
+use Brezgalov\ZernovozamApiClient\ResponseAdapters\GetWindowsResponseAdapter;
 use yii\base\InvalidConfigException;
+use yii\httpclient\Exception;
 use yii\httpclient\Message;
 use yii\httpclient\Request;
 use yii\web\Cookie;
@@ -42,21 +44,36 @@ class ZernovozamApiClient extends BaseApiClient
     const RESPONSE_STATUS_ERROR_WRONG_PHONE = 13;
     const RESPONSE_STATUS_ERROR_BALANCE_END = 14;
 
+    const ERROR_MESSAGE_UNKNOWN = "Неопределённый статус";
+    const ERROR_MESSAGE_WRONG_TRUCK_COUNT = "Указано количество автомобилей вне разрешенного предела";
+    const ERROR_MESSAGE_RECEIVING_HALTED = "Стивидор приостановил выдачу таймслотов";
+    const ERROR_MESSAGE_LIMITS_EXHAUSTED = "Лимиты выбраны на ближайшие доступные даты";
+    const ERROR_MESSAGE_UNKNOWN_STEVEDORE = "Указан несуществующий стивидор";
+    const ERROR_MESSAGE_CONFINE_EXHAUSTED = "Лимиты выбраны на культуру для данного экспортера на ближайшие доступные даты";
+    const ERROR_MESSAGE_CULTURE_LIMITS_EXHAUSTED = "Лимиты выбраны на прием данной культуры на ближайшие доступные даты";
+    const ERROR_MESSAGE_STEVEDORE_NOT_TAKE_FOR_THIS_TRADER = "Указанный стивидор не принимает данного экспортера";
+    const ERROR_MESSAGE_WRONG_CHECKOUT_DATE = "Указана дата таймслота вне разрешенного предела";
+    const ERROR_MESSAGE_BLOCKED = "Телефон клиента заблокирован";
+    const ERROR_MESSAGE_QUOTE_IS_ZERO = "Указанный экспортер не имеет доступных квот";
+    const ERROR_MESSAGE_CONNECTION_PROBLEM = "Не удалось подключиться к сервису выдачи таймслотов";
+    const ERROR_MESSAGE_WRONG_PHONE = "Неверно указан телефон";
+    const ERROR_MESSAGE_BALANCE_END = "Баланс пользователя не позволяет получить таймслот";
+
     const ERRORS_DESCRIPTIONS = [
-        self::RESPONSE_STATUS_ERROR_UNKNOWN => "Неопределённый статус",
-        self::RESPONSE_STATUS_ERROR_WRONG_TRUCK_COUNT => "Указано количество автомобилей вне разрешенного предела",
-        self::RESPONSE_STATUS_ERROR_RECEIVING_HALTED => "Стивидор приостановил выдачу таймслотов",
-        self::RESPONSE_STATUS_ERROR_LIMITS_EXHAUSTED => "Лимиты выбраны на ближайшие доступные даты",
-        self::RESPONSE_STATUS_ERROR_UNKNOWN_STEVEDORE => "Указан несуществующий стивидор",
-        self::RESPONSE_STATUS_ERROR_CONFINE_EXHAUSTED => "Лимиты выбраны на культуру для данного экспортера на ближайшие доступные даты",
-        self::RESPONSE_STATUS_ERROR_CULTURE_LIMITS_EXHAUSTED => "Лимиты выбраны на прием данной культуры на ближайшие доступные даты",
-        self::RESPONSE_STATUS_ERROR_STEVEDORE_NOT_TAKE_FOR_THIS_TRADER => "Указанный стивидор не принимает данного экспортера",
-        self::RESPONSE_STATUS_ERROR_WRONG_CHECKOUT_DATE => "Указана дата таймслота вне разрешенного предела",
-        self::RESPONSE_STATUS_ERROR_BLOCKED => "Телефон клиента заблокирован",
-        self::RESPONSE_STATUS_ERROR_QUOTE_IS_ZERO => "Указанный экспортер не имеет доступных квот",
-        self::RESPONSE_STATUS_ERROR_CONNECTION_PROBLEM => "Не удалось подключиться к сервису выдачи таймслотов",
-        self::RESPONSE_STATUS_ERROR_WRONG_PHONE => "Неверно указан телефон",
-        self::RESPONSE_STATUS_ERROR_BALANCE_END => "Балланс пользователя не позволяет получить таймслот",
+        self::RESPONSE_STATUS_ERROR_UNKNOWN => self::ERROR_MESSAGE_UNKNOWN,
+        self::RESPONSE_STATUS_ERROR_WRONG_TRUCK_COUNT => self::ERROR_MESSAGE_WRONG_TRUCK_COUNT,
+        self::RESPONSE_STATUS_ERROR_RECEIVING_HALTED => self::ERROR_MESSAGE_RECEIVING_HALTED,
+        self::RESPONSE_STATUS_ERROR_LIMITS_EXHAUSTED => self::ERROR_MESSAGE_LIMITS_EXHAUSTED,
+        self::RESPONSE_STATUS_ERROR_UNKNOWN_STEVEDORE => self::ERROR_MESSAGE_UNKNOWN_STEVEDORE,
+        self::RESPONSE_STATUS_ERROR_CONFINE_EXHAUSTED => self::ERROR_MESSAGE_CONFINE_EXHAUSTED,
+        self::RESPONSE_STATUS_ERROR_CULTURE_LIMITS_EXHAUSTED => self::ERROR_MESSAGE_CULTURE_LIMITS_EXHAUSTED,
+        self::RESPONSE_STATUS_ERROR_STEVEDORE_NOT_TAKE_FOR_THIS_TRADER => self::ERROR_MESSAGE_STEVEDORE_NOT_TAKE_FOR_THIS_TRADER,
+        self::RESPONSE_STATUS_ERROR_WRONG_CHECKOUT_DATE => self::ERROR_MESSAGE_WRONG_CHECKOUT_DATE,
+        self::RESPONSE_STATUS_ERROR_BLOCKED => self::ERROR_MESSAGE_BLOCKED,
+        self::RESPONSE_STATUS_ERROR_QUOTE_IS_ZERO => self::ERROR_MESSAGE_QUOTE_IS_ZERO,
+        self::RESPONSE_STATUS_ERROR_CONNECTION_PROBLEM => self::ERROR_MESSAGE_CONNECTION_PROBLEM,
+        self::RESPONSE_STATUS_ERROR_WRONG_PHONE => self::ERROR_MESSAGE_WRONG_PHONE,
+        self::RESPONSE_STATUS_ERROR_BALANCE_END => self::ERROR_MESSAGE_BALANCE_END,
     ];
 
     /**
@@ -230,12 +247,13 @@ class ZernovozamApiClient extends BaseApiClient
 
     /**
      * @param GetWindowRequestBody $requestBody
-     * @return Message|Request
+     * @return GetWindowsResponseAdapter|object
      * @throws InvalidConfigException
+     * @throws Exception
      */
-    public function getWindowsRequest(GetWindowRequestBody $requestBody)
+    public function requestWindows(GetWindowRequestBody $requestBody)
     {
-        return $this->prepareRequest(self::URL_GET_WINDOWS)
+        $request = $this->prepareRequest(self::URL_GET_WINDOWS)
             ->setMethod('POST')
             ->setData(
                 $requestBody->getBody()
@@ -243,6 +261,11 @@ class ZernovozamApiClient extends BaseApiClient
             ->setCookies(
                 $this->getAuthCookies()
             );
+
+        return \Yii::createObject(GetWindowsResponseAdapter::class, [
+            'request' => $request,
+            'response' => $request->send(),
+        ]);
     }
 
     /**
