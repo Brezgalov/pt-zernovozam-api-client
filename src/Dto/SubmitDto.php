@@ -36,7 +36,7 @@ class SubmitDto extends Model
     public function fields()
     {
         return [
-            'timeslot_id' => $this->timeslotId,
+            'timeslot_id' => 'timeslotId',
             'api_error' => 'apiError',
         ];
     }
