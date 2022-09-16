@@ -7,6 +7,7 @@ use Brezgalov\ZernovozamApiClient\RequestBodies\ConfirmWindowsRequestBody;
 use Brezgalov\ZernovozamApiClient\RequestBodies\GetWindowRequestBody;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\ConfirmTimeslotsResponseAdapter;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\GetWindowsResponseAdapter;
+use Brezgalov\ZernovozamApiClient\ResponseAdapters\MyTimeslotsCollection;
 use yii\base\InvalidConfigException;
 use yii\httpclient\Client;
 use yii\httpclient\Exception;
@@ -29,6 +30,7 @@ class ZernovozamApiClient extends BaseApiClient
     const URL_GET_STEVEDORE_CULTURES = 'json/reply/GetStevedoreCultures';
     const URL_GET_WINDOWS = 'json/reply/GetWindows';
     const URL_CONFIRM_TIMESLOTS = 'json/reply/ConfirmTimeslots';
+    const URL_GET_MY_TIMESLOTS = 'json/reply/GetMyTimeslots';
 
     const RESPONSE_STATUS_ERROR_UNKNOWN = 0;
     const RESPONSE_STATUS_SUCCESS = 1;
@@ -290,6 +292,26 @@ class ZernovozamApiClient extends BaseApiClient
             );
 
         return \Yii::createObject(ConfirmTimeslotsResponseAdapter::class, [
+            'request' => $request,
+            'response' => $request->send(),
+        ]);
+    }
+
+    /**
+     * @return MyTimeslotsCollection
+     * @throws Exception
+     * @throws InvalidConfigException
+     */
+    public function getMyTimeslots()
+    {
+        $request = $this->prepareRequest(self::URL_GET_MY_TIMESLOTS)
+            ->setMethod('POST')
+            ->setFormat(Client::FORMAT_JSON)
+            ->setCookies(
+                $this->getAuthCookies()
+            );
+
+        return \Yii::createObject(MyTimeslotsCollection::class, [
             'request' => $request,
             'response' => $request->send(),
         ]);
