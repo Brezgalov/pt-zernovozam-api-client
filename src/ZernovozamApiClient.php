@@ -273,10 +273,11 @@ class ZernovozamApiClient extends BaseApiClient
 
     /**
      * @param ConfirmWindowsRequestBody $requestBody
-     * @return Message|Request
+     * @return ConfirmTimeslotsResponseAdapter
+     * @throws Exception
      * @throws InvalidConfigException
      */
-    public function getConfirmWindowRequest(ConfirmWindowsRequestBody $requestBody)
+    public function confirmWindows(ConfirmWindowsRequestBody $requestBody)
     {
         $request = $this->prepareRequest(self::URL_CONFIRM_TIMESLOTS)
             ->setMethod('POST')
