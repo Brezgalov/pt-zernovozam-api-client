@@ -5,6 +5,7 @@ namespace Brezgalov\ZernovozamApiClient;
 use Brezgalov\BaseApiClient\BaseApiClient;
 use Brezgalov\ZernovozamApiClient\RequestBodies\ConfirmWindowsRequestBody;
 use Brezgalov\ZernovozamApiClient\RequestBodies\GetWindowRequestBody;
+use Brezgalov\ZernovozamApiClient\ResponseAdapters\ConfirmTimeslotsResponseAdapter;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\GetWindowsResponseAdapter;
 use yii\base\InvalidConfigException;
 use yii\httpclient\Client;
@@ -277,7 +278,7 @@ class ZernovozamApiClient extends BaseApiClient
      */
     public function getConfirmWindowRequest(ConfirmWindowsRequestBody $requestBody)
     {
-        return $this->prepareRequest(self::URL_CONFIRM_TIMESLOTS)
+        $request = $this->prepareRequest(self::URL_CONFIRM_TIMESLOTS)
             ->setMethod('POST')
             ->setFormat(Client::FORMAT_JSON)
             ->setData(
@@ -286,5 +287,10 @@ class ZernovozamApiClient extends BaseApiClient
             ->setCookies(
                 $this->getAuthCookies()
             );
+
+        return \Yii::createObject(ConfirmTimeslotsResponseAdapter::class, [
+            'request' => $request,
+            'response' => $request->send(),
+        ]);
     }
 }
