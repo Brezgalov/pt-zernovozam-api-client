@@ -306,7 +306,6 @@ class ZernovozamApiClient extends BaseApiClient
     {
         $request = $this->prepareRequest(self::URL_GET_MY_TIMESLOTS)
             ->setMethod('POST')
-            ->setFormat(Client::FORMAT_JSON)
             ->setCookies(
                 $this->getAuthCookies()
             );
