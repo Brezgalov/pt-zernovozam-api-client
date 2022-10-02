@@ -26,11 +26,13 @@ class MyTimeslotsCollection extends BaseResponseAdapter implements \Iterator
      */
     public function current()
     {
-        if (!array_key_exists('Timeslots', $this->responseData)) {
+        $data = $this->responseData['Timeslots'] ?? [];
+
+        if (!is_array($data) || !array_key_exists($this->position, $data)) {
             return null;
         }
 
-        return new TimeslotDto($this->responseData['Timeslots'][$this->position]);
+        return new TimeslotDto($data[$this->position]);
     }
 
     /**
