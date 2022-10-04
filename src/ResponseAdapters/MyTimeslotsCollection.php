@@ -56,7 +56,7 @@ class MyTimeslotsCollection extends BaseResponseAdapter implements \Iterator
      */
     public function valid()
     {
-        if (!array_key_exists('Timeslots', $this->responseData)) {
+        if (!is_array($this->responseData) || !array_key_exists('Timeslots', $this->responseData)) {
             return false;
         }
 
