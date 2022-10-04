@@ -28,7 +28,7 @@ class GetWindowsResponseAdapter extends BaseResponseAdapter
             return null;
         }
 
-        return ZernovozamApiClient::ERRORS_DESCRIPTIONS[$status] ?? ZernovozamApiClient::ERROR_MESSAGE_UNKNOWN;
+        return ZernovozamApiClient::GET_WINDOW_ERRORS_DESCRIPTIONS[$status] ?? ZernovozamApiClient::ERROR_MESSAGE_UNKNOWN;
     }
 
     /**

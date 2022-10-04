@@ -50,6 +50,6 @@ class SubmitDto extends Model
             return null;
         }
 
-        return ZernovozamApiClient::ERRORS_DESCRIPTIONS[$this->status] ?? ZernovozamApiClient::ERROR_MESSAGE_UNKNOWN;
+        return ZernovozamApiClient::GET_CONFIRM_WINDOWS_ERRORS_DESCRIPTIONS[$this->status] ?? ZernovozamApiClient::ERROR_MESSAGE_UNKNOWN;
     }
 }
