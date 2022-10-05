@@ -31,6 +31,7 @@ class ZernovozamApiClient extends BaseApiClient
     const URL_GET_WINDOWS = 'json/reply/GetWindows';
     const URL_CONFIRM_TIMESLOTS = 'json/reply/ConfirmTimeslots';
     const URL_GET_MY_TIMESLOTS = 'json/reply/GetMyTimeslots';
+    const URL_DELETE_TIMESLOTS = 'json/reply/DeleteWindowsRequestV2';
 
     const RESPONSE_STATUS_SUCCESS = 1;
 
@@ -49,6 +50,7 @@ class ZernovozamApiClient extends BaseApiClient
     const GET_WINDOW_RESPONSE_STATUS_ERROR_WRONG_PHONE = 13;
     const GET_WINDOW_RESPONSE_STATUS_ERROR_BALANCE_END = 14;
 
+    const CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_UNKNOWN = 0;
     const CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_TIMESLOT_NOT_FOUND = 2;
     const CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_PLATE_TRUCK_WRONG = 3;
     const CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_TIMESLOT_TIME_WRONG = 4;
@@ -65,6 +67,8 @@ class ZernovozamApiClient extends BaseApiClient
     const CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_DATETIME_FORMAT_WRONG = 15;
     const CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_ONLY_TRUCK_OWNER_CAN_SUBMIT = 16;
     const CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_TRUCK_ON_NAT = 17;
+
+    const DELETE_WINDOWS_RESPONSE_STATUS_ERROR_UNKNOWN = 0;
 
     const ERROR_MESSAGE_UNKNOWN = "Неопределённый статус";
 
@@ -117,6 +121,7 @@ class ZernovozamApiClient extends BaseApiClient
     ];
 
     const GET_CONFIRM_WINDOWS_ERRORS_DESCRIPTIONS = [
+        self::CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_UNKNOWN => self::ERROR_MESSAGE_UNKNOWN,
         self::CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_TIMESLOT_NOT_FOUND => self::CONFIRM_WINDOWS_ERROR_MESSAGE_TIMESLOT_NOT_FOUND,
         self::CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_PLATE_TRUCK_WRONG => self::CONFIRM_WINDOWS_ERROR_MESSAGE_PLATE_TRUCK_WRONG,
         self::CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_TIMESLOT_TIME_WRONG => self::CONFIRM_WINDOWS_ERROR_MESSAGE_TIMESLOT_TIME_WRONG,
@@ -133,6 +138,10 @@ class ZernovozamApiClient extends BaseApiClient
         self::CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_DATETIME_FORMAT_WRONG => self::CONFIRM_WINDOWS_ERROR_MESSAGE_DATETIME_FORMAT_WRONG,
         self::CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_ONLY_TRUCK_OWNER_CAN_SUBMIT => self::CONFIRM_WINDOWS_ERROR_MESSAGE_ONLY_TRUCK_OWNER_CAN_SUBMIT,
         self::CONFIRM_WINDOWS_RESPONSE_STATUS_ERROR_TRUCK_ON_NAT => self::CONFIRM_WINDOWS_ERROR_MESSAGE_TRUCK_ON_NAT,
+    ];
+
+    const DELETE_WINDOWS_ERRORS_DESCRIPTIONS = [
+        self::DELETE_WINDOWS_RESPONSE_STATUS_ERROR_UNKNOWN => self::ERROR_MESSAGE_UNKNOWN,
     ];
 
     /**
@@ -369,5 +378,20 @@ class ZernovozamApiClient extends BaseApiClient
             'request' => $request,
             'response' => $request->send(),
         ]);
+    }
+
+    /**
+     * @param array $timeslotsIds
+     * @return Request
+     * @throws InvalidConfigException
+     */
+    public function getDeleteTimeslotsRequest(array $timeslotsIds)
+    {
+        $request = $this->prepareRequest(self::URL_DELETE_TIMESLOTS)
+            ->setMethod('POST')
+            ->setFormat(Client::FORMAT_JSON)
+            ->setCookies(
+                $this->getAuthCookies()
+            );
     }
 }
