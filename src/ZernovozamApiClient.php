@@ -6,6 +6,7 @@ use Brezgalov\BaseApiClient\BaseApiClient;
 use Brezgalov\ZernovozamApiClient\RequestBodies\ConfirmWindowsRequestBody;
 use Brezgalov\ZernovozamApiClient\RequestBodies\GetWindowRequestBody;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\ConfirmTimeslotsResponseAdapter;
+use Brezgalov\ZernovozamApiClient\ResponseAdapters\DeleteTimeslotsResponseAdapter;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\GetWindowsResponseAdapter;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\MyTimeslotsCollection;
 use yii\base\InvalidConfigException;
@@ -382,16 +383,22 @@ class ZernovozamApiClient extends BaseApiClient
 
     /**
      * @param array $timeslotsIds
-     * @return Request
+     * @return DeleteTimeslotsResponseAdapter
+     * @throws Exception
      * @throws InvalidConfigException
      */
-    public function getDeleteTimeslotsRequest(array $timeslotsIds)
+    public function deleteTimeslots(array $timeslotsIds)
     {
         $request = $this->prepareRequest(self::URL_DELETE_TIMESLOTS)
             ->setMethod('POST')
             ->setFormat(Client::FORMAT_JSON)
             ->setCookies(
                 $this->getAuthCookies()
-            );
+            )
+            ->setData([
+                'WindowIds' => $timeslotsIds
+            ]);
+
+        return new DeleteTimeslotsResponseAdapter($request, $request->send());
     }
 }
