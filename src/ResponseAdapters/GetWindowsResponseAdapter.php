@@ -41,7 +41,14 @@ class GetWindowsResponseAdapter extends BaseResponseAdapter
 
         $result = [];
         foreach ($windows as $window) {
-            $result[] = \Yii::createObject(TimeslotDto::class, $window);
+            // list fixes formats issue
+            list($window['Date']) = explode(' ', $window['Date'] ?? '');
+            list(,$window['DateEnd']) = explode(' ', $window['DateEnd'] ?? '');
+            list(,$window['DateStart']) = explode(' ', $window['DateStart'] ?? '');
+
+            $result[] = \Yii::createObject(TimeslotDto::class, [
+                'config' => $window,
+            ]);
         }
 
         return $result;
