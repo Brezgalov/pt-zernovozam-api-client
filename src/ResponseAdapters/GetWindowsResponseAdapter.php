@@ -40,13 +40,20 @@ class GetWindowsResponseAdapter extends BaseResponseAdapter
         $windows = $this->responseData['Windows'] ?? [];
 
         $result = [];
-        foreach ($windows as $timeslotId => $windowTime) {
-            list($part1) = (explode('-', $windowTime));
-            $windowTimeUnix = mb_ereg_replace('[^0-9]', '', $part1);
-
+        foreach ($windows as $window) {
             $result[] = \Yii::createObject(WindowDto::class, [
-                'time' => intval($windowTimeUnix),
-                'timeslotId' => intval($timeslotId),
+                'cultureId' => $window['CultureId'] ?? null,
+                'time' => array_key_exists('Date', $window) ? strtotime($window['Date']) : null,
+                'timeEnd' => array_key_exists('DateEnd', $window) ? strtotime($window['DateEnd']) : null,
+                'timeStart' => array_key_exists('DateStart', $window) ? strtotime($window['DateStart']) : null,
+                'timeslotId' => $window['Id'] ??  null,
+                'IsArrived' => $window['IsArrived'] ?? null,
+                'IsLate' => $window['IsLate'] ?? null,
+                'IsOwnWindow' => $window['IsOwnWindow'] ?? null,
+                'ReceiverId' => $window['ReceiverId'] ?? null,
+                'ShowPhone' => $window['ShowPhone'] ?? null,
+                'TraderId' => $window['TraderId'] ?? null,
+                'ProviderId' => $window['ProviderId'] ?? null,
             ]);
         }
 

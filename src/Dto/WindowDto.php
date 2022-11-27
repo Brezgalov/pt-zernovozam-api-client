@@ -9,7 +9,22 @@ class WindowDto extends Model
     /**
      * @var int
      */
+    public $cultureId;
+
+    /**
+     * @var int
+     */
     public $time;
+
+    /**
+     * @var int
+     */
+    public $timeEnd;
+
+    /**
+     * @var int
+     */
+    public $timeStart;
 
     /**
      * @var int
@@ -17,26 +32,37 @@ class WindowDto extends Model
     public $timeslotId;
 
     /**
-     * WindowDto constructor.
-     * @param int $time
-     * @param int $timeslotId
+     * @var bool
      */
-    public function __construct(int $time, int $timeslotId)
-    {
-        $this->time = $time;
-        $this->timeslotId = $timeslotId;
-
-        parent::__construct([]);
-    }
+    public $isArrived;
 
     /**
-     * @return array
+     * @var bool
      */
-    public function fields()
-    {
-        return [
-            'time',
-            'timeslot_id' => 'timeslotId',
-        ];
-    }
+    public $isLate;
+
+    /**
+     * @var bool
+     */
+    public $isOwnWindow;
+
+    /**
+     * @var int
+     */
+    public $receiverId;
+
+    /**
+     * @var bool
+     */
+    public $showPhone;
+
+    /**
+     * @var int
+     */
+    public $traderId;
+
+    /**
+     * @var int
+     */
+    public $providerId;
 }
