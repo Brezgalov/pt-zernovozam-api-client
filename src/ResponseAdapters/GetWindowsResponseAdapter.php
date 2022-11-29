@@ -3,7 +3,8 @@
 namespace Brezgalov\ZernovozamApiClient\ResponseAdapters;
 
 use Brezgalov\BaseApiClient\ResponseAdapters\BaseResponseAdapter;
-use Brezgalov\ZernovozamApiClient\Dto\TimeslotDto;
+use Brezgalov\ZernovozamApiClient\Dto\ITimeslotDto;
+use Brezgalov\ZernovozamApiClient\Dto\TimeslotWindowDto;
 use Brezgalov\ZernovozamApiClient\ZernovozamApiClient;
 use yii\base\InvalidConfigException;
 
@@ -32,7 +33,7 @@ class GetWindowsResponseAdapter extends BaseResponseAdapter
     }
 
     /**
-     * @return TimeslotDto[]
+     * @return ITimeslotDto[]
      * @throws InvalidConfigException
      */
     public function getTimeslotsArray()
@@ -41,12 +42,7 @@ class GetWindowsResponseAdapter extends BaseResponseAdapter
 
         $result = [];
         foreach ($windows as $window) {
-            // list fixes formats issue
-            list($window['Date']) = explode(' ', $window['Date'] ?? '');
-            list(,$window['DateEnd']) = explode(' ', $window['DateEnd'] ?? '');
-            list(,$window['DateStart']) = explode(' ', $window['DateStart'] ?? '');
-
-            $result[] = \Yii::createObject(TimeslotDto::class, [
+            $result[] = \Yii::createObject(TimeslotWindowDto::class, [
                 'config' => $window,
             ]);
         }
