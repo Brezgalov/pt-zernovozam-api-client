@@ -102,7 +102,7 @@ class ZernovozamApiClient extends BaseApiClient
     const CONFIRM_WINDOWS_ERROR_MESSAGE_TRUCK_GLONASS_INACTIVE = "Устройство глонасс не работает";
     const CONFIRM_WINDOWS_ERROR_MESSAGE_TRUCK_IN_TOWN = "Запрещено получать таймслоты машинам находящимся в городе";
     const CONFIRM_WINDOWS_ERROR_MESSAGE_NO_MONEY = "Недостаточно средств на счету";
-    const CONFIRM_WINDOWS_ERROR_MESSAGE_GLONASS_PROVIDER_BLOCKED_YOUR_DEVICE = "Услугуа заблокирована установщиком Глонасс";
+    const CONFIRM_WINDOWS_ERROR_MESSAGE_GLONASS_PROVIDER_BLOCKED_YOUR_DEVICE = "Услуга заблокирована установщиком Глонасс";
     const CONFIRM_WINDOWS_ERROR_MESSAGE_PHONE_NOT_SET = "Не указан номер";
     const CONFIRM_WINDOWS_ERROR_MESSAGE_CONFIRM_FORMAT_WRONG = "Неверный формат подтверждения";
     const CONFIRM_WINDOWS_ERROR_MESSAGE_DATETIME_FORMAT_WRONG = "Неверный формат даты или времени";
