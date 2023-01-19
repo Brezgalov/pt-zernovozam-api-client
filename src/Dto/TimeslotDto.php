@@ -88,12 +88,12 @@ class TimeslotDto extends Component implements ITimeslotDto
     /**
      * @var string
      */
-    public $deletePossibleAfterCreationHours;
+    public $deletePossibleAfterCreationHours = 1;
 
     /**
      * @var string
      */
-    public $deletePossibleBeforeTimeslotHours;
+    public $deletePossibleBeforeTimeslotHours = 2;
 
     /**
      * TimeslotDto constructor.
@@ -298,5 +298,29 @@ class TimeslotDto extends Component implements ITimeslotDto
     public function getProviderId()
     {
         return $this->providerId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeletePossibleAfterCreationHours()
+    {
+        return $this->deletePossibleAfterCreationHours;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeletePossibleBeforeTimeslotHours()
+    {
+        return $this->deletePossibleBeforeTimeslotHours;
     }
 }

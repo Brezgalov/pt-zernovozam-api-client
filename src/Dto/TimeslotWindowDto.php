@@ -81,6 +81,21 @@ class TimeslotWindowDto extends Component implements ITimeslotDto
     public $providerId;
 
     /**
+     * @var string
+     */
+    public $createdDate;
+
+    /**
+     * @var string
+     */
+    public $deletePossibleAfterCreationHours = 1;
+
+    /**
+     * @var string
+     */
+    public $deletePossibleBeforeTimeslotHours = 2;
+
+    /**
      * TimeslotDto constructor.
      * @param array $config
      */
@@ -111,6 +126,9 @@ class TimeslotWindowDto extends Component implements ITimeslotDto
             "ShowPhone" => "showPhone",
             "TraderId" => "traderId",
             "ProviderId" => "providerId",
+            "DateCreate" => "createdDate",
+            "DenyDelAfter" => "deletePossibleAfterCreationHours",
+            "DenyDelBefore" => "deletePossibleBeforeTimeslotHours",
         ];
     }
 
@@ -121,9 +139,15 @@ class TimeslotWindowDto extends Component implements ITimeslotDto
     protected function prepareConfig(array $config)
     {
         $map = $this->getConfigFieldsMap();
+        $mapKeys = array_keys($map);
 
         foreach ($config as $key => $value) {
             if (!array_key_exists($key, $map)) {
+                continue;
+            }
+
+            if (!in_array($key, $mapKeys)) {
+                unset($config[$key]);
                 continue;
             }
 
@@ -262,5 +286,29 @@ class TimeslotWindowDto extends Component implements ITimeslotDto
     public function getProviderId()
     {
         return $this->providerId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCreatedDate()
+    {
+        return $this->createdDate;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeletePossibleAfterCreationHours()
+    {
+        return $this->deletePossibleAfterCreationHours;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDeletePossibleBeforeTimeslotHours()
+    {
+        return $this->deletePossibleBeforeTimeslotHours;
     }
 }

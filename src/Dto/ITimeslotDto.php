@@ -83,4 +83,19 @@ interface ITimeslotDto
      * @return int
      */
     public function getProviderId();
+
+    /**
+     * @return string
+     */
+    public function getCreatedDate();
+
+    /**
+     * @return int
+     */
+    public function getDeletePossibleAfterCreationHours();
+
+    /**
+     * @return int
+     */
+    public function getDeletePossibleBeforeTimeslotHours();
 }
