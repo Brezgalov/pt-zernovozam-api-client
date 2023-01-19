@@ -81,6 +81,21 @@ class TimeslotDto extends Component implements ITimeslotDto
     public $providerId;
 
     /**
+     * @var string
+     */
+    public $createdDate;
+
+    /**
+     * @var string
+     */
+    public $deletePossibleAfterCreationHours;
+
+    /**
+     * @var string
+     */
+    public $deletePossibleBeforeTimeslotHours;
+
+    /**
      * TimeslotDto constructor.
      * @param array $config
      */
@@ -111,6 +126,9 @@ class TimeslotDto extends Component implements ITimeslotDto
             "ShowPhone" => "showPhone",
             "TraderId" => "traderId",
             "ProviderId" => "providerId",
+            "DateCreate" => "createdDate",
+            "DenyDelAfter" => "deletePossibleAfterCreationHours",
+            "DenyDelBefore" => "deletePossibleBeforeTimeslotHours",
         ];
     }
 
@@ -121,9 +139,15 @@ class TimeslotDto extends Component implements ITimeslotDto
     protected function prepareConfig(array $config)
     {
         $map = $this->getConfigFieldsMap();
+        $mapKeys = array_keys($map);
 
         foreach ($config as $key => $value) {
             if (!array_key_exists($key, $map)) {
+                continue;
+            }
+
+            if (!in_array($key, $mapKeys)) {
+                unset($config[$key]);
                 continue;
             }
 
@@ -169,7 +193,7 @@ class TimeslotDto extends Component implements ITimeslotDto
             return null;
         }
 
-        list($date) = explode(' ', $this->date);
+        [$date] = explode(' ', $this->date);
 
         return strtotime("{$date} {$this->dateStart}");
     }
@@ -183,7 +207,7 @@ class TimeslotDto extends Component implements ITimeslotDto
             return null;
         }
 
-        list($date) = explode(' ', $this->date);
+        [$date] = explode(' ', $this->date);
 
         return strtotime("{$date} {$this->dateEnd}");
     }
