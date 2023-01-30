@@ -9,10 +9,7 @@ use Brezgalov\ZernovozamApiClient\ResponseAdapters\ConfirmTimeslotsResponseAdapt
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\DeleteTimeslotsResponseAdapter;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\GetWindowsResponseAdapter;
 use Brezgalov\ZernovozamApiClient\ResponseAdapters\MyTimeslotsCollection;
-use yii\base\InvalidConfigException;
 use yii\httpclient\Client;
-use yii\httpclient\Exception;
-use yii\httpclient\Message;
 use yii\httpclient\Request;
 use yii\web\Cookie;
 use yii\web\CookieCollection;
@@ -186,67 +183,46 @@ class ZernovozamApiClient extends BaseApiClient
      */
     public $superToken;
 
-    /**
-     * @param string $value
-     * @return ZernovozamApiClient
-     */
-    public function setSsId(string $value)
+    public function setSsId(string $value): ZernovozamApiClient
     {
         $this->ssId = $value;
 
         return $this;
     }
 
-    /**
-     * @param string $value
-     * @return ZernovozamApiClient
-     */
-    public function setSsPid(string $value)
+    public function setSsPid(string $value): ZernovozamApiClient
     {
         $this->ssPid = $value;
 
         return $this;
     }
 
-    /**
-     * @param string $value
-     * @return ZernovozamApiClient
-     */
-    public function setSsOpt(string $value)
+    public function setSsOpt(string $value): ZernovozamApiClient
     {
         $this->ssOpt = $value;
 
         return $this;
     }
 
-    /**
-     * @param string $phone
-     * @return string|string[]|null
-     */
-    public function getClearPhoneNumber(string $phone)
+    public function getClearPhoneNumber(string $phone): string
     {
         return preg_replace('/[^0-9]/', '', $phone);
     }
 
-    /**
-     * @param string $route
-     * @param array $queryParams
-     * @param Request|null $request
-     * @return Message|Request
-     * @throws InvalidConfigException
-     */
-    public function prepareRequest(string $route, array $queryParams = [], Request $request = null)
+    public function prepareRequest(string $route, array $queryParams = [], Request $request = null): Request
     {
-        return parent::prepareRequest($route, $queryParams, $request)
-            ->setHeaders([
-                self::API_TOKEN_HEADER_NAME => $this->apiToken,
-            ]);
+        if (empty($request)) {
+            $request = $this->makeRequest();
+        }
+
+        $request->setHeaders([
+            self::API_TOKEN_HEADER_NAME => $this->apiToken,
+        ]);
+
+        return parent::prepareRequest($route, $queryParams, $request);
     }
 
-    /**
-     * @return CookieCollection
-     */
-    public function getAuthCookies()
+    public function getAuthCookies(): CookieCollection
     {
         return new CookieCollection([
             self::AUTH_COOKIE_NAME_SS_ID => \Yii::createObject([
@@ -267,13 +243,7 @@ class ZernovozamApiClient extends BaseApiClient
         ]);
     }
 
-    /**
-     * @param string $phone
-     * @param bool $rememberMe
-     * @return Message|Request
-     * @throws InvalidConfigException
-     */
-    public function authByPhoneAndSuperTokenRequest(string $phone, bool $rememberMe = false)
+    public function authByPhoneAndSuperTokenRequest(string $phone, bool $rememberMe = false): Request
     {
         $phone = $this->getClearPhoneNumber($phone);
 
@@ -289,56 +259,51 @@ class ZernovozamApiClient extends BaseApiClient
             ]);
     }
 
-    /**
-     * @return Request
-     * @throws InvalidConfigException
-     */
-    public function getTerminalsRequest()
+    public function getTerminalsRequest(): Request
     {
-        return $this
-            ->prepareRequest(self::URL_ACTUAL_STEVEDORE)
-            ->setMethod('GET')
-            ->setCookies(
-                $this->getAuthCookies()
-            );
+        return $this->prepareRequest(
+            self::URL_ACTUAL_STEVEDORE,
+            [],
+            $this
+                ->makeRequest()
+                ->setMethod('GET')
+                ->setCookies(
+                    $this->getAuthCookies()
+                )
+        );
     }
 
-    /**
-     * @return Request
-     * @throws InvalidConfigException
-     */
-    public function getTradersRequest()
+    public function getTradersRequest(): Request
     {
-        return $this
-            ->prepareRequest(self::URL_TRADER_REQUEST)
-            ->setMethod('POST')
-            ->setCookies(
-                $this->getAuthCookies()
-            );
+        return $this->prepareRequest(
+            self::URL_TRADER_REQUEST,
+            [],
+            $this
+                ->makeRequest()
+                ->setMethod('POST')
+                ->setCookies(
+                    $this->getAuthCookies()
+                )
+        );
     }
 
-    /**
-     * @return Request
-     * @throws InvalidConfigException
-     */
-    public function getCulturesRequest()
+    public function getCulturesRequest(): Request
     {
-        return $this->prepareRequest(self::URL_GET_STEVEDORE_CULTURES)
-            ->setMethod('POST')
-            ->setCookies(
-                $this->getAuthCookies()
-            );
+        return $this->prepareRequest(
+            self::URL_GET_STEVEDORE_CULTURES,
+            [],
+            $this
+                ->makeRequest()
+                ->setMethod('POST')
+                ->setCookies(
+                    $this->getAuthCookies()
+                )
+        );
     }
 
-    /**
-     * @param GetWindowRequestBody $requestBody
-     * @return GetWindowsResponseAdapter
-     * @throws InvalidConfigException
-     * @throws Exception
-     */
-    public function requestWindows(GetWindowRequestBody $requestBody)
+    public function requestWindows(GetWindowRequestBody $requestBody): GetWindowsResponseAdapter
     {
-        $request = $this->prepareRequest(self::URL_GET_WINDOWS)
+        $request = $this->makeRequest()
             ->setMethod('POST')
             ->setFormat(Client::FORMAT_JSON)
             ->setData(
@@ -347,22 +312,18 @@ class ZernovozamApiClient extends BaseApiClient
             ->setCookies(
                 $this->getAuthCookies()
             );
+
+        $request = $this->prepareRequest(self::URL_GET_WINDOWS, [], $request);
 
         return \Yii::createObject(GetWindowsResponseAdapter::class, [
             'request' => $request,
-            'response' => $request->send(),
+            'response' => $this->sendRequest($request),
         ]);
     }
 
-    /**
-     * @param ConfirmWindowsRequestBody $requestBody
-     * @return ConfirmTimeslotsResponseAdapter
-     * @throws Exception
-     * @throws InvalidConfigException
-     */
-    public function confirmWindows(ConfirmWindowsRequestBody $requestBody)
+    public function confirmWindows(ConfirmWindowsRequestBody $requestBody): ConfirmTimeslotsResponseAdapter
     {
-        $request = $this->prepareRequest(self::URL_CONFIRM_TIMESLOTS)
+        $request = $this->makeRequest()
             ->setMethod('POST')
             ->setFormat(Client::FORMAT_JSON)
             ->setData(
@@ -372,40 +333,33 @@ class ZernovozamApiClient extends BaseApiClient
                 $this->getAuthCookies()
             );
 
+        $request = $this->prepareRequest(self::URL_CONFIRM_TIMESLOTS, [], $request);
+
         return \Yii::createObject(ConfirmTimeslotsResponseAdapter::class, [
             'request' => $request,
-            'response' => $request->send(),
+            'response' => $this->sendRequest($request),
         ]);
     }
 
-    /**
-     * @return MyTimeslotsCollection
-     * @throws Exception
-     * @throws InvalidConfigException
-     */
-    public function getMyTimeslots()
+    public function getMyTimeslots(): MyTimeslotsCollection
     {
-        $request = $this->prepareRequest(self::URL_GET_MY_TIMESLOTS)
+        $request = $this->makeRequest()
             ->setMethod('POST')
             ->setCookies(
                 $this->getAuthCookies()
             );
 
+        $request = $this->prepareRequest(self::URL_GET_MY_TIMESLOTS, [], $request);
+
         return \Yii::createObject(MyTimeslotsCollection::class, [
             'request' => $request,
-            'response' => $request->send(),
+            'response' => $this->sendRequest($request),
         ]);
     }
 
-    /**
-     * @param array $timeslotsIds
-     * @return DeleteTimeslotsResponseAdapter
-     * @throws Exception
-     * @throws InvalidConfigException
-     */
-    public function deleteTimeslots(array $timeslotsIds)
+    public function deleteTimeslots(array $timeslotsIds): DeleteTimeslotsResponseAdapter
     {
-        $request = $this->prepareRequest(self::URL_DELETE_TIMESLOTS)
+        $request = $this->makeRequest()
             ->setMethod('POST')
             ->setFormat(Client::FORMAT_JSON)
             ->setCookies(
@@ -415,6 +369,8 @@ class ZernovozamApiClient extends BaseApiClient
                 'WindowIds' => $timeslotsIds
             ]);
 
-        return new DeleteTimeslotsResponseAdapter($request, $request->send());
+        $request = $this->prepareRequest(self::URL_DELETE_TIMESLOTS, [], $request);
+
+        return new DeleteTimeslotsResponseAdapter($request, $this->sendRequest($request));
     }
 }
